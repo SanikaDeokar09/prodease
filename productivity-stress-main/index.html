@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Productivity & Stress Dashboard with Facial Stress Detection</title>
+
+<!-- Face API.js library -->
+<script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
+
+<!-- External CSS and JS (app.js will contain the full script) -->
+<link rel="stylesheet" href="style.css" />
+<script defer src="app.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>AI Productivity & Stress Detection Study</h1>
+  <div id="loginSection">
+    <h2>Login</h2>
+    <label for="roleSelect">I am a:</label>
+    <select id="roleSelect">
+      <option value="employee">Employee</option>
+      <option value="manager">Manager</option>
+    </select>
+    <div id="employeeIdDiv">
+      <label for="employeeIdInput">Employee ID:</label>
+      <input type="text" id="employeeIdInput" placeholder="E.g. E001" />
+    </div>
+    <div id="managerPwdDiv" class="hidden">
+      <label for="managerPwdInput">Manager Password:</label>
+      <input type="password" id="managerPwdInput" placeholder="Enter password" />
+    </div>
+    <button id="loginBtn">Login</button>
+  </div>
+  
+  <div id="employeeDashboard" class="hidden">
+    <h2>Employee Dashboard</h2>
+    <nav>
+      <button onclick="showTab('surveyTab')">AI Survey</button>
+      <button onclick="showTab('sessionTab')">Work Session</button>
+      <button onclick="showTab('productivityTab')">Productivity & Salary</button>
+      <button onclick="showTab('facialStressTab')">Facial Stress</button>
+      <button onclick="logout()">Logout</button>
+    </nav>
+    <hr/>
+    <div id="surveyTab" class="tabContent">
+      <h3>Participant Intake Survey</h3>
+      <form id="surveyForm">
+        <label>How often do you use AI tools during work?</label>
+        <select id="aiUsage" required>
+          <option value="">Select frequency</option>
+          <option value="Never">Never</option>
+          <option value="Rarely">Rarely</option>
+          <option value="Sometimes">Sometimes</option>
+          <option value="Often">Often</option>
+          <option value="Always">Always</option>
+        </select>
+
+        <label>Do you feel technostress while using AI tools?</label>
+        <select id="technostress" required>
+          <option value="">Select level</option>
+          <option value="No">No</option>
+          <option value="Sometimes">Sometimes</option>
+          <option value="Often">Often</option>
+        </select>
+
+        <label>How engaged do you feel during sessions with AI help?</label>
+        <select id="engagement" required>
+          <option value="">Select level</option>
+          <option value="Not engaged">Not engaged</option>
+          <option value="Moderately engaged">Moderately engaged</option>
+          <option value="Highly engaged">Highly engaged</option>
+        </select>
+
+        <label>Comments about AI tools or productivity:</label>
+        <textarea id="comments" placeholder="Optional feedback..."></textarea>
+
+        <button type="submit">Submit Survey</button>
+      </form>
+    </div>
+
+    <div id="sessionTab" class="tabContent hidden">
+      <h3>Work Session Tracking</h3>
+      <label for="taskType">Task Type:</label>
+      <select id="taskType" required>
+        <option value="">Select task:</option>
+        <option value="Writing">Writing</option>
+        <option value="Coding">Coding</option>
+        <option value="Meetings">Meetings</option>
+        <option value="Research">Research</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <button id="startSessionBtn">Start Session</button>
+      <button id="endSessionBtn" disabled>End Session</button>
+      <div class="timer" id="timerDisplay"></div>
+
+      <label for="outputDetails">Output / Results:</label>
+      <textarea id="outputDetails" placeholder="Describe your work output..."></textarea>
+
+      <label for="errorCount">Error Count (if applicable):</label>
+      <input type="number" id="errorCount" min="0" value="0" />
+
+      <div>
+        <button id="saveSessionBtn" disabled>Save Session</button>
+      </div>
+
+      <hr/>
+      <h4>Session History</h4>
+      <table id="sessionHistoryTable">
+        <thead>
+          <tr><th>Date</th><th>Task</th><th>Duration (min)</th><th>Quality</th><th>Productivity</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="productivityTab" class="tabContent hidden">
+      <h3>Productivity & Salary</h3>
+      <p><b>Average Productivity:</b> <span id="avgProductivity"></span></p>
+      <p><b>Salary Based on Productivity:</b> ₹<span id="calculatedSalary"></span></p>
+    </div>
+
+    <div id="facialStressTab" class="tabContent hidden">
+      <h3>Real-time Facial Stress Monitoring</h3>
+      <video id="webcam" width="320" height="240" autoplay muted></video>
+      <p>Detected Stress Level: <span id="stressLevel">Unknown</span></p>
+    </div>
+  </div>
+
+  <div id="managerDashboard" class="hidden">
+    <h2>Manager Dashboard</h2>
+    <button onclick="logout()">Logout</button>
+    <h3>Employee Summary</h3>
+    <table id="employeeSummaryTable">
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Avg. Productivity</th><th>Avg. Quality</th><th>Total Hours Worked</th><th>Last Session</th><th>Engagement</th><th>Technostress</th><th>Salary</th><th>Details</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="employeeDetails" class="hidden">
+      <h3>Employee Details</h3>
+      <button onclick="hideEmployeeDetails()">Close Details</button>
+      <div id="employeeDetailContent"></div>
+      <button onclick="managerDownloadCSV()">Download All Data CSV</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
